@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "869274919708",
+    "project_id": "chat-app-firebase-auth-noti",
+    "storage_bucket": "chat-app-firebase-auth-noti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869274919708:android:c1ecba1185eb8c82d1d0d9",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "869274919708-66jrejhjkchbcigj4irvglr518pni4vv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXMRj4KKNBP9VXnBoaP9vbkTJvKSvDrvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "869274919708-66jrejhjkchbcigj4irvglr518pni4vv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
