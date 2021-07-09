@@ -7,8 +7,16 @@ import 'dart:io';
 
 class ConversationDetailViewModel extends ChangeNotifier {
   final ChatRepository _repository;
+  final String? _newReceiverID;
+  final String? _newReceiverAvatar;
+  final String? _newUserID;
 
-  ConversationDetailViewModel(this._repository);
+  ConversationDetailViewModel(this._repository, this._newReceiverID, this._newReceiverAvatar, this._newUserID) {
+    // setChatRoomInfo(
+    //     receiverID: this._newReceiverID!,
+    //     userID: this._newUserID!,
+    //     receiverAvatar: this._newReceiverAvatar);
+  }
 
   List<QueryDocumentSnapshot> _allLoadedMessages = new List.from([]);
   Stream<QuerySnapshot>? _messagesStream;
@@ -46,7 +54,6 @@ class ConversationDetailViewModel extends ChangeNotifier {
 
   void setChatRoomInfo({
       String? receiverAvatar, required String receiverID, required String userID}) {
-    print('SET CHAT ROOM INFO');
     _setBusy(true);
     final roomID = userID.hashCode <= receiverID.hashCode
         ? '$userID-$receiverID'
@@ -81,9 +88,7 @@ class ConversationDetailViewModel extends ChangeNotifier {
   }
 
   void loadStickers() async {
-    print('LOAD STICKERS');
     List<Sticker> stickers = await _repository.getRemoteStickers();
-    print('LOAD STICKERS : ${stickers.length}');
     this._stickers = stickers;
   }
 

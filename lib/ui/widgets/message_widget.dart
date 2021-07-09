@@ -27,6 +27,7 @@ class Message extends StatelessWidget {
       );
     }
     return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,11 +41,11 @@ class Message extends StatelessWidget {
                   : message.get('type') == 1
                     ? _buildImage(message.get('content'), 'assets/stickers/img_not_available.jpeg', context)
                     : _buildSticker(message.get('content')),
-              isLastMessageLeft(index)
-                  ? _buildTime(message.get('timestamp'))
-                  : SizedBox()
             ],
           ),
+          isLastMessageLeft(index)
+              ? _buildTime(message.get('timestamp'))
+              : SizedBox()
         ],
       )
     );
@@ -165,34 +166,41 @@ class Message extends StatelessWidget {
     // } else {
     //   return false;
     // }
-    return false;
+    return true;
   }
 
   Widget _buildAvatar(String url) {
-    return Image.network(
-      url,
-      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: CircularProgressIndicator(
-            color: kcPrimaryColor,
-            value: loadingProgress.expectedTotalBytes != null &&
-                loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                : null,
-          ),
-        );
-      },
-      errorBuilder: (context, object, stackTrace) {
-        return Icon(
-          Icons.account_circle,
-          size: 35,
-          color: kcGreyColor,
-        );
-      },
-      width: 35,
-      height: 35,
-      fit: BoxFit.cover,
+    print('MESSAGE AVATAR : $url');
+    return Material(
+      borderRadius: BorderRadius.all(
+        Radius.circular(18.0),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Image.network(
+        url,
+        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              color: kcPrimaryColor,
+              value: loadingProgress.expectedTotalBytes != null &&
+                  loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, object, stackTrace) {
+          return Icon(
+            Icons.account_circle,
+            size: 35,
+            color: kcGreyColor,
+          );
+        },
+        width: 35,
+        height: 35,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

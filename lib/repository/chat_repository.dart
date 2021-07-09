@@ -61,7 +61,6 @@ class ChatRepositoryImpl extends ChatRepository {
 
   @override
   Future<List<Sticker>> getRemoteStickers() {
-    print('GET REMOTE STICKER IN REPOSITORY');
     return _service.getStickers();
   }
 

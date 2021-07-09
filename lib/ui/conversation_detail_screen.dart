@@ -29,7 +29,10 @@ class ConversationDetailScreenWrapper extends StatelessWidget {
     final repository = ChatRepositoryImpl(chatService, fileService);
     final userID = Provider.of<AuthenticationViewModel>(context).user!.user!.uid;
     return ChangeNotifierProvider<ConversationDetailViewModel>(
-      create: (context) => ConversationDetailViewModel(repository),
+      create: (context) => ConversationDetailViewModel(
+          repository, receiverID, receiverAvatar, userID)
+            ..setChatRoomInfo(receiverID: receiverID, userID: userID,
+                receiverAvatar: receiverAvatar),
       child: ConversationDetailScreen(
         receiverAvatar: receiverAvatar, receiverID: receiverID, userID: userID),
     );
@@ -69,12 +72,6 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
     super.initState();
     focusNode.addListener(onFocusChange);
     messagesScrollController.addListener(_scrollListener);
-    Future.delayed(Duration.zero).then((value) {
-      getViewModel(isListen: false).setChatRoomInfo(
-          receiverID: widget.receiverID,
-          userID: widget.userID,
-          receiverAvatar: widget.receiverAvatar);
-    });
   }
 
   @override
@@ -102,6 +99,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 0,
         title: Text(
           'CHAT',
           style: TextStyle(color: Color(0xff203152), fontWeight: FontWeight.bold),
@@ -247,7 +245,8 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
     PickedFile? pickedFile;
     pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      getViewModel(isListen: false).sendImage(File(pickedFile.path));
+      // getViewModel(isListen: false).sendImage(File(pickedFile.path));
+      context.read<ConversationDetailViewModel>().sendImage(File(pickedFile.path));
     }
     if (getViewModel().uploadedFileError != null) {
       Fluttertoast.showToast(msg: getViewModel().uploadedFileError!);
@@ -301,6 +300,30 @@ class StickersPanel extends StatelessWidget {
             ),
           );
         }).toList()
+      ],
+    );
+  }
+}
+
+class HeaderInformation extends StatelessWidget {
+  final String url;
+  final String name;
+  final String? lastActive;
+  const HeaderInformation({
+    Key? key, required this.url, 
+    required this.name, this.lastActive}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Image.network('https://ged.com/wp-content/uploads/Online-GED-Test-Illustration-Mobile.svg'),
+            Text(name)
+          ],
+        ),
+        Text('Active now')
       ],
     );
   }
