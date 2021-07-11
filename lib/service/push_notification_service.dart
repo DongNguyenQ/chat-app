@@ -5,20 +5,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotificationService {
-  late final FirebaseMessaging _fcm;
-  late final FlutterLocalNotificationsPlugin _localNotification;
-  late final AndroidNotificationChannel _androidChannel;
+  static FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  static FlutterLocalNotificationsPlugin _localNotification
+      = FlutterLocalNotificationsPlugin();
+  static AndroidNotificationChannel _androidChannel
+      = AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    'This channel is used for important notifications.',
+    importance: Importance.high,
+  );
 
-  Future initialise() async {
-    _fcm = FirebaseMessaging.instance;
-    _localNotification = FlutterLocalNotificationsPlugin();
-    _androidChannel = AndroidNotificationChannel(
-      'high_importance_channel',
-      'High Importance Notifications',
-      'This channel is used for important notifications.',
-      importance: Importance.high,
-    );
-    String? token = await getToken();
+  static Future initialize() async {
+    String? token = await _getToken();
     print('TOKEN : ${token ?? 'NO TOKEN'}');
     var initSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     _localNotification.initialize(InitializationSettings(android: initSettingsAndroid));
@@ -36,14 +35,14 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_firebaseNotiActionHandler);
   }
 
-  Future<String?> getToken() async {
+  static Future<String?> _getToken() async {
     return await _fcm.getToken();
   }
 
-  Future<void> _firebaseNotificationHandler(
-      RemoteMessage message) async {
-    await Firebase.initializeApp();
-    print('HANDLING MESSAGE : ${message.messageId}');
+  static Future<void> _firebaseNotificationHandler(RemoteMessage message) async {
+    print('HANDLING MESSAGE : ${message.notification!.body} \n '
+        'TITLE : ${message.notification!.title} \n '
+        'URL : ${message.notification!.android!.imageUrl}');
     RemoteNotification notification = message.notification!;
     AndroidNotification android = message.notification!.android!;
     print('SHOW LOCAL NOTI');
@@ -65,7 +64,7 @@ class PushNotificationService {
     );
   }
 
-  void _firebaseNotiActionHandler(RemoteMessage message) {
+  static void _firebaseNotiActionHandler(RemoteMessage message) {
     print('USER CLICKED ON MESSAGE');
     // return null;
   }
