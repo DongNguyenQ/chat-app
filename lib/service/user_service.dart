@@ -4,6 +4,7 @@ import 'package:dartz/dartz_unsafe.dart';
 
 abstract class UserService {
   Stream<QuerySnapshot> getUsersList();
+  void updatePushToken();
 }
 
 class UserServiceImpl extends UserService {
@@ -21,5 +22,9 @@ class UserServiceImpl extends UserService {
     return query;
   }
 
+  @override
+  void updatePushToken() {
+
+  }
 }
 

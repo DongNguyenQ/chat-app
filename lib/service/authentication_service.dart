@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthenticationService {
-  Future<Either<Failure, UserCredential>> signInByGoogle();
+  Future<Either<Failure, UserCredential>> signInByGoogle({String? pushNotiToken});
   Future<Either<Failure, UserCredential>> signInByFacebook();
   Future<void> signOutFirebase();
 }
@@ -20,7 +20,7 @@ class AuthenticationServiceImpl extends AuthenticationService {
   }
 
   @override
-  Future<Either<Failure, UserCredential>> signInByGoogle() async {
+  Future<Either<Failure, UserCredential>> signInByGoogle({String? pushNotiToken}) async {
     try {
       final GoogleSignInAccount? account = await GoogleSignIn().signIn();
       if (account != null) {
@@ -34,7 +34,7 @@ class AuthenticationServiceImpl extends AuthenticationService {
             await _firebaseAuth.signInWithCredential(credential);
         print('USER CREDENTIAL : ${user.user!.displayName}');
         if (user.user != null) {
-          _saveUserToDocument(user);
+          _saveUserToDocument(user, token: pushNotiToken);
         }
         return Right(user);
       }
@@ -44,7 +44,8 @@ class AuthenticationServiceImpl extends AuthenticationService {
     }
   }
 
-  Future<bool> _saveUserToDocument(UserCredential user) async {
+  Future<bool> _saveUserToDocument(UserCredential user, {String? token}) async {
+    print('TOKEN : $token');
     try {
       final QuerySnapshot result = await FirebaseFirestore.instance
           .collection(userDocument)
@@ -58,7 +59,8 @@ class AuthenticationServiceImpl extends AuthenticationService {
             .set({
           'nickname': user.user!.displayName,
           'photoUrl': user.user!.photoURL,
-          'id': user.user!.uid
+          'id': user.user!.uid,
+          'pushToken': token
         });
       }
       return true;

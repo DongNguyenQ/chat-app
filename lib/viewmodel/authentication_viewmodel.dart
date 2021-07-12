@@ -1,5 +1,6 @@
 import 'package:chat_app/core/failure.dart';
 import 'package:chat_app/repository/authentication_repository.dart';
+import 'package:chat_app/service/push_notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,7 @@ class AuthenticationViewModel extends ChangeNotifier {
           this._user = success;
           print('RESULT : ${success.user!.displayName}');
         });
+    String? token = await PushNotificationService.getToken();
     _setBusy(false);
   }
 

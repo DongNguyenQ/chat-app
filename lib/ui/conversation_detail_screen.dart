@@ -78,6 +78,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   void dispose() {
     chatController.dispose();
     messagesScrollController.dispose();
+    // getViewModel(isListen: false).endConversation();
     super.dispose();
   }
 
